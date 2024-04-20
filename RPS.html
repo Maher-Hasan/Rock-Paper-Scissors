@@ -4,80 +4,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rock Paper Scissors</title>
+    <style>
+        #score {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
+    <ul id="options">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+    </ul>
+    <div id="score"></div>
+
     <script>
-        const choices = ["rock", "paper", "scissors"];
-        //make the computer pick a random value of a array of strings.
+        const options = document.querySelector('#options');
+        const resultDisplay = document.createElement('p');
+        const scoreDisplay = document.getElementById('score');
+        let playerScore = 0;
+        let computerScore = 0;
+        let ties = 0;
+        let roundsPlayed = 0;
+    
+        document.body.appendChild(resultDisplay);
+    
+        options.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'BUTTON' && roundsPlayed < 5) {
+                const playerSelection = target.id;
+                const computerSelection = getComputerChoice(["rock", "paper", "scissors"]);
+                const result = playRound(playerSelection, computerSelection);
+                resultDisplay.textContent = result;
+                updateScores(result);
+                roundsPlayed++;}
+            if (roundsPlayed === 5) {
+                    endGame();
+                }
+        });
+    
         function getComputerChoice(array) {
             const randomIndex = Math.floor(Math.random() * array.length);
             return array[randomIndex];
         }
-
+    
         function playRound(playerSelection, computerSelection) {
-            //make the function case-insensitive by making all users input lowercase.
-            playerSelection = playerSelection.toLowerCase();
-
-            //Define all the possible outcomes.
             const outcomes = {
                 rock: { beats: "scissors" },
                 paper: { beats: "rock" },
                 scissors: { beats: "paper" }
             };
-
-            //checks whether the player selection is valid.
+    
             if (!outcomes[playerSelection]) {
                 return "Invalid selection. Please choose rock, paper, or scissors.";
             }
-
-            // Determine the winner
+    
             if (playerSelection === computerSelection) {
+                ties++;
                 return "It's a tie!";
             } else if (outcomes[playerSelection].beats === computerSelection) {
+                playerScore++;
                 return `You Win! ${playerSelection} beats ${computerSelection}.`;
             } else {
+                computerScore++;
                 return `You Lose! ${computerSelection} beats ${playerSelection}.`;
             }
         }
-
-        function playGame() {
-            let playerScore = 0;
-            let computerScore = 0;
-            
-            //loop 5 rounds
-            for (let i = 0; i < 5; i++) {
-                const playerSelection = prompt("Enter your choice (rock, paper, or scissors):");//prompt for the user to select a choice every round.
-                const choices = ["rock", "paper", "scissors"];
-                const computerSelection = choices[Math.floor(Math.random() * choices.length)];
-                
-                //save the result of the playRound function and show it in the console.
-                const result = playRound(playerSelection, computerSelection);
-                console.log(`Round ${i + 1}: ${result}`);
-                
-                //adjust the scores after each round (based on wins and loses for user)
-                if (result.includes("Win")) {
-                    playerScore++;
-                } else if (result.includes("Lose")) {
-                    computerScore++;
-                }
-            }
-
-            // showing last result after 5 rounds end
+    
+        function updateScores(result) {
+            scoreDisplay.textContent = `Player: ${playerScore} | Computer: ${computerScore} | Ties: ${ties}`;
+        }
+    
+        function endGame() {
             if (playerScore > computerScore) {
-                console.log("Congratulations! You win the game!");
+                resultDisplay.textContent = "Congratulations! You win the game!";
             } else if (playerScore < computerScore) {
-                console.log("Sorry, you lose the game.");
+                resultDisplay.textContent = "Sorry, you lose the game.";
             } else {
-                console.log("It's a tie game!");
+                resultDisplay.textContent = "It's a tie game!";
             }
         }
-
-        // Uncomment the line below to start the game
-        playGame();
-
     </script>
+    
 </body>
 
 </html>
