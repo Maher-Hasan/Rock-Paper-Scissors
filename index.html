@@ -17,7 +17,7 @@
             justify-content: center;
             align-items: center;
         }
- 
+
         #game-container {
             text-align: center;
         }
@@ -57,12 +57,14 @@
         </div>
         <p id="result"></p>
         <div id="score"></div>
+        <button id="reset" style="display: none;">New Game</button>
     </div>
 
     <script>
         const options = document.querySelector('#options');
         const resultDisplay = document.getElementById('result');
         const scoreDisplay = document.getElementById('score');
+        const resetButton = document.getElementById('reset');
         let playerScore = 0;
         let computerScore = 0;
         let ties = 0;
@@ -125,10 +127,21 @@
                 gameResult = "It's a tie game!";
             }
             resultDisplay.innerHTML = "Game Over<br>" + gameResult;
+            resetButton.style.display = "inline-block"; // Show only at game end
         }
 
-    </script>
 
+        resetButton.addEventListener('click', () => {
+            playerScore = 0;
+            computerScore = 0;
+            ties = 0;
+            roundsPlayed = 0;
+            scoreDisplay.textContent = `Player: ${playerScore} | Computer: ${computerScore} | Ties: ${ties}`;
+            resultDisplay.textContent = "Game reset. Let's play again!";
+            resetButton.style.display = "none"; // Hide again until game ends
+        });
+
+    </script>
 </body>
 
 </html>
